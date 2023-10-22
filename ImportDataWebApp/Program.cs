@@ -1,11 +1,26 @@
+using ImportDataWebApp.Data.Models;
+using ImportDataWebApp.Data.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+// Add ConnectionString
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
+
+builder.Services.AddDbContext<ExcelImportDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddScoped<ImportExcelService>();
+
 
 var app = builder.Build();
 
